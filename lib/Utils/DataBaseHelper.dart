@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:core';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -5,20 +7,14 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DataBaseHelper{
-  static final dataBaseName = "pharmacy.db";
+  static const dataBaseName = "pharmacy.db";
   static const version = 1;
-  static final TableName ='Ahmed';
+  static const TableName ='Ahmed';
   static const id = 'ID';
   static const String Name = 'Name';
-  static final BarCode = 'BarCode';
+  static const BarCode = 'BarCode';
   static const Cost = 'Cost';
   static const Sell = 'Sell';
-  static const _dose = 'dose';
-  static const _mostSide = 'mostSide';
-  static const _drugName = 'drugName';
-  static const _mechanism = 'mechanism';
-  static const _pregnancy = 'pregnancy';
-  // dose,mostSide,drugName,mechanism,pregnancy;
  DataBaseHelper._privateConstructor();
 static DataBaseHelper dataBaseHelper = DataBaseHelper._privateConstructor();
   static Database? _database;
@@ -30,7 +26,6 @@ Future<Database?> get database async{
     return await _initDataBase();
   }
 }
-
   _initDataBase() async {
   var datPath = await getDatabasesPath();
   String path = join(datPath,dataBaseName);
@@ -65,10 +60,14 @@ Future<List<Map<String, Object?>>?> getAllUser() async {
   db!.close();
   return result?.toList();
 }
-readData(String sql) async {
+  readData(String sql) async {
   Database? db = await database;
   List<Map> response = await db!.rawQuery(sql);
   return response;
+}
+Future<List> searchBar () async {
+  Database? db = await database;
+  return db!.query(TableName);
 }
 
 
@@ -78,12 +77,12 @@ readData(String sql) async {
 //   var db = await dataBaseHelper.database;
 //   return Sqflite.firstIntValue(await db?.rawQuery('SELECT COUNT(ID) FROM $TableName'));
 // }
-//update
-//   Future<int> upDate (Map<String,dynamic> row) async {
-//
-//     String id = row[Name];
-//     return await db.update(TableName, row,where: Name,whereArgs: [id]);
-//   }
+// update
+  upDate (String table ,Map<String,Object?> values ,String? myWhere) async {
+    Database? db = await dataBaseHelper.database;
+   int response = await db!.update(table, values,where: myWhere);
+   return response;
+  }
   // Future<List<Map>> Data() async {
   //   Database? db = await dataBaseHelper.database;
   //   List<Map> response =await db?.readData("SELECT * FROM Ahmed");

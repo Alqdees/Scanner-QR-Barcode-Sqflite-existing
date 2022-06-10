@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:scanner_qr_barcode/ShowInformation.dart';
 import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
-import 'package:scanner_qr_barcode/model/User.dart';
+
 
 
 
@@ -13,18 +13,18 @@ class  Home extends StatefulWidget {
 }
 
 class  _HomeState extends State<Home> {
+  bool isLoading = true;
+  // User user = User();
+  DataBaseHelper db = DataBaseHelper.dataBaseHelper;
 
-  User user = User();
   @override
-  initState(){
+  void initState(){
     readData();
     super.initState();
   }
-  bool isLoading = true;
-  DataBaseHelper db = DataBaseHelper.dataBaseHelper;
-  var users = [];
 
-Future readData() async {
+  List users = [];
+  Future readData() async {
     List<Map> response =await db.readData("SELECT * FROM Ahmed");
     users.addAll(response);
     isLoading = false;
@@ -32,7 +32,6 @@ Future readData() async {
       setState((){});
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,23 +51,28 @@ Future readData() async {
         ),
         actions:  [
           IconButton(
-              onPressed: () {} ,
+              onPressed: () {
+                //
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (context) => const QRViewExample())
+
+              } ,
               icon: const Icon(
                 Icons.camera_alt_outlined,
-                size: 32.0,
+                size: 28.0,
+
               )),
           IconButton(
               onPressed: () {} ,
               icon: const Icon(
                 Icons.search,
-                size: 32.0,
+                size: 28.0,
               )),
         ],
       ),
       floatingActionButton:  FloatingActionButton(
         onPressed: () async {
             Navigator.of(context).pushNamed("AddData");
-
         } ,
         tooltip: 'Add',
         backgroundColor: const  Color.fromARGB(255, 150, 0, 72),
@@ -79,32 +83,52 @@ Future readData() async {
       ),
       body:
       isLoading ==true?
-          const Center(child: Text('Loading',style: TextStyle(fontSize: 16.0,color: Colors.red),),)
+          const Center(child: Text('Loading ... ',style: TextStyle(fontSize: 16.0,color: Colors.red),),)
       :Center(
              child: ListView(children:  [
             ListView.builder(
                      itemCount: users.length,
-                      physics:  const NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                        shrinkWrap: true,
                        itemBuilder: (context,i){
-                         return Container(
+                         return Card(
+                             borderOnForeground: true,
+                             child: ListTile(
+                               // leading:  const IconButton( onPressed:()  {
+                               //   print('Ali');
+                               //
+                               // }, icon: Icon(Icons.edit),),
+                               onTap: (){
+                                 Navigator.of(context).push(
 
-                           padding: const EdgeInsetsDirectional.all(4.0),
-                           child: Card(
-                               borderOnForeground: true,
+                                 MaterialPageRoute(builder: (context) => ShowInformation(
+                                   name: users[i]['Name'],
+                                   barcode: users[i]['Barcode'],
+                                   cost: users[i]['Cost'],
+                                   sell: users[i]['Sell'],
+                                   id: "${users[i]['ID']}",
+                                 )));
+                               },
+                               title:Text("${users[i]['Name']}\n${users[i]["Cost"]}"
+                                 ,
+                               ) ,
+                              //  subtitle: Text('${users[i]['Sell']}'),
+                               subtitle: Text(
+                                 " ${users[i]['Sell']}",
+                                 style: const TextStyle(color: Colors.black),
+                                //  style: const TextStyle(color: Colors.black),
 
-                               child: ListTile(
-                                 title:Text("${users[i]['Name']}\n${users[i]["Cost"]}"
-                                   ,
-                                 ) ,
-                                 subtitle: Text("${users[i]['Sell']}",style: TextStyle(color: Colors.black),),
-                               ),
-                              shape:
-                              Border.all(color:Color.fromARGB(255, 150, 0, 72)),shadowColor: Color.fromARGB(255, 150, 0, 72),
-                               elevation: 32.0
-                               ,
+                                 ),
                              ),
-                         );
+                            shape:
+                            Border.all(
+                         // color: ,
+                                color:
+                                const Color.fromARGB(255, 150, 0, 72)),
+                           shadowColor: const Color.fromARGB(255, 150, 0, 72),
+                             elevation: 4.0
+                             ,
+                           );
                    }),
 
          ],),

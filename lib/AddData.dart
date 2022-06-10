@@ -45,10 +45,7 @@ class _AddData extends State<AddData>{
           db.insert('''
           INSERT INTO Ahmed (`Name`,`BarCode`,`Cost`,`Sell`,`dose`,`mostSide`,`drugName`,`mechanism`,`pregnancy`) VALUES
            ("${name.text}","${barcode.text}",
-          "${cost.text}","${sell.text}",
-           "${dose.text}","${mostSide.text}"
-           ,"${drugName.text}",
-           "${mechanism.text}","${pregnancy.text}")
+          "${cost.text}","${sell.text}")
           ''');
          if(response! > 0){
            Fluttertoast.showToast(msg: " ${name.text}تمت اَضافة ",toastLength: Toast.LENGTH_SHORT);
@@ -90,36 +87,6 @@ class _AddData extends State<AddData>{
                     hintText: 'sell'
                 ),
                 controller: sell,
-              ),
-              TextFormField(
-                decoration:const InputDecoration(
-                    hintText: 'dose'
-                ),
-                controller: dose,
-              ),
-              TextFormField(
-                decoration:const InputDecoration(
-                    hintText: 'mostSide'
-                ),
-                controller: mostSide,
-              ),
-              TextFormField(
-                decoration:const InputDecoration(
-                    hintText: 'drugName'
-                ),
-                controller: drugName,
-              ),
-              TextFormField(
-                decoration:const InputDecoration(
-                    hintText: 'mechanism'
-                ),
-                controller: mechanism,
-              ),
-              TextFormField(
-                decoration:const InputDecoration(
-                    hintText: 'pregnancy'
-                ),
-                controller: pregnancy,
               ),
             ],
           ))
